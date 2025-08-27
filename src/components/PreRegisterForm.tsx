@@ -117,6 +117,13 @@ export const PreRegisterForm = ({ onSuccess }: PreRegisterFormProps) => {
       
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-md mx-auto">
+          {/* Game Asset */}
+          <div className="text-center mb-6">
+            <div className="w-32 h-32 mx-auto bg-gradient-card border border-border/30 rounded-2xl flex items-center justify-center shadow-card">
+              <div className="text-muted-foreground text-sm">Game Logo</div>
+            </div>
+          </div>
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-gaming rounded-xl mb-4 shadow-glow">
