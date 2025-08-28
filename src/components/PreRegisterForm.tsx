@@ -1,3 +1,4 @@
+// src/components/PreRegisterFormFixed.tsx
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { GamepadIcon, Users, Trophy, Share2 } from "lucide-react";
+import { GamepadIcon, Users, Trophy, AlertCircle } from "lucide-react";
+import { registerPlayer, fetchRankingData, convertApiPlayerToFrontend } from "@/lib/api";
 
 interface Player {
   id: string;
@@ -24,7 +26,12 @@ interface PreRegisterFormProps {
   onSuccess: (player: Player) => void;
 }
 
-export const PreRegisterForm = ({ onSuccess }: PreRegisterFormProps) => {
+interface Stats {
+  totalPlayers: number;
+  totalInvites: number;
+}
+
+export const PreRegisterFormFixed = ({ onSuccess }: PreRegisterFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,6 +42,8 @@ export const PreRegisterForm = ({ onSuccess }: PreRegisterFormProps) => {
   const [referrerCode, setReferrerCode] = useState<string>("");
   const [referrerName, setReferrerName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [stats, setStats] = useState<Stats>({ totalPlayers: 0, totalInvites: 0 });
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -43,17 +52,34 @@ export const PreRegisterForm = ({ onSuccess }: PreRegisterFormProps) => {
     const ref = urlParams.get('ref');
     if (ref) {
       setReferrerCode(ref);
-      // Simulate finding referrer name
-      setReferrerName("GameMaster123"); // This would come from your backend
+      // TODO: Buscar nome do referrer na API se necessário
+      setReferrerName("GameMaster123");
     }
+
+    // Carregar estatísticas reais do banco
+    loadStats();
   }, []);
 
-  const generateInviteCode = () => {
-    return Math.random().toString(36).substring(2, 12).toUpperCase();
-  };
-
-  const generateUHash = () => {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const loadStats = async () => {
+    try {
+      setIsLoadingStats(true);
+      const rankingData = await fetchRankingData();
+      setStats({
+        totalPlayers: rankingData.total_players,
+        totalInvites: rankingData.total_invites,
+      });
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas:', error);
+      // Em caso de erro, manter números padrão
+      setStats({ totalPlayers: 0, totalInvites: 0 });
+      toast({
+        title: "Erro ao carregar dados",
+        description: "Não foi possível carregar as estatísticas atuais.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingStats(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,29 +105,49 @@ export const PreRegisterForm = ({ onSuccess }: PreRegisterFormProps) => {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const newPlayer: Player = {
-        id: Math.random().toString(36).substring(2, 15),
+    try {
+      // CONEXÃO REAL COM A API LARAVEL
+      const response = await registerPlayer({
         name: formData.name,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
-        inviteCode: generateInviteCode(),
+        password: formData.password,
         referrerCode: referrerCode || undefined,
-        referrerName: referrerName || undefined,
-        points: 0,
-        emailVerified: false,
-        createdAt: new Date()
-      };
-
-      setIsLoading(false);
-      onSuccess(newPlayer);
-      
-      toast({
-        title: "Pré-registro realizado!",
-        description: "Verifique seu email para confirmar a conta",
       });
-    }, 2000);
+
+      if (response.success && response.data) {
+        // Converter dados da API para o formato do frontend
+        const player = convertApiPlayerToFrontend(response.data);
+        
+        toast({
+          title: "Pré-registro realizado!",
+          description: "Verifique seu email para confirmar a conta",
+        });
+
+        // Atualizar estatísticas após o registro
+        await loadStats();
+        
+        onSuccess(player);
+      } else {
+        throw new Error(response.message || 'Erro no registro');
+      }
+    } catch (error: any) {
+      console.error('Erro no registro:', error);
+      
+      let errorMessage = "Erro interno. Tente novamente.";
+      
+      if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast({
+        title: "Erro no cadastro",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -247,17 +293,29 @@ export const PreRegisterForm = ({ onSuccess }: PreRegisterFormProps) => {
             </CardContent>
           </Card>
 
-          {/* Stats */}
+          {/* Stats - AGORA COM DADOS REAIS DO BANCO */}
           <div className="grid grid-cols-2 gap-4 mt-6">
             <Card className="bg-gradient-card border-border/50 shadow-card text-center">
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-primary">1,247</div>
+                <div className="text-2xl font-bold text-primary">
+                  {isLoadingStats ? (
+                    <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
+                  ) : (
+                    stats.totalPlayers.toLocaleString()
+                  )}
+                </div>
                 <div className="text-sm text-muted-foreground">Players</div>
               </CardContent>
             </Card>
             <Card className="bg-gradient-card border-border/50 shadow-card text-center">
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-accent">856</div>
+                <div className="text-2xl font-bold text-accent">
+                  {isLoadingStats ? (
+                    <div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin mx-auto"></div>
+                  ) : (
+                    stats.totalInvites.toLocaleString()
+                  )}
+                </div>
                 <div className="text-sm text-muted-foreground">Convites</div>
               </CardContent>
             </Card>
