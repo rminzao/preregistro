@@ -1,73 +1,155 @@
-# Welcome to your Lovable project
+# 🎮 Sistema de Pré-Registro com Ranking – DDTank  
 
-## Project info
+Projeto completo de **pré-registro com ranking de convites**, integrando **frontend em React/TypeScript** com **backend em Laravel**.  
 
-**URL**: https://lovable.dev/projects/6f6c6369-4afc-41ab-b565-da6598817137
+---
 
-## How can I edit this code?
+## 📌 Funcionalidades Implementadas
 
-There are several ways of editing your application.
+- **Cadastro de usuários (pré-registro)**  
+  - Validação de email e celular  
+  - Geração de código de convite único  
 
-**Use Lovable**
+- **Ranking em tempo real**  
+  - Lista dos jogadores que mais convidaram  
+  - Exibição de pontos, total de convites e taxa de conversão  
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6f6c6369-4afc-41ab-b565-da6598817137) and start prompting.
+- **Compartilhamento via WhatsApp**  
+  - Geração automática de link de convite  
+  - Mensagem pronta para compartilhamento rápido  
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Login e Sessão**  
+  - Alternância entre cadastro e login na página inicial  
+  - Função de logout  
+  - Modal com informações promocionais após o registro  
 
-**Use your preferred IDE**
+- **WhatsApp OTP (opcional)**  
+  - Envio de código de verificação  
+  - Validação do número de celular  
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Integração completa com API Laravel**  
+  - Pré-registro  
+  - Ranking  
+  - Autenticação básica  
+  - Envio e verificação de OTP  
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🛠️ Tecnologias Utilizadas
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### **Frontend**
+- ⚡ [Vite](https://vitejs.dev/)  
+- ⚛️ [React + TypeScript](https://react.dev/)  
+- 🎨 [TailwindCSS](https://tailwindcss.com/)  
+- 🧩 [shadcn/ui](https://ui.shadcn.com/)  
+- 🌐 [Axios](https://axios-http.com/)  
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### **Backend**
+- 🐘 [Laravel](https://laravel.com/) (PHP 8+)  
+- 📦 Composer para dependências  
+- 🛢️ Banco de Dados SQL (SQLite em dev, compatível com MySQL/PostgreSQL em prod)  
+- 🔑 Autenticação e validação via Middleware  
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🚀 Como Rodar o Projeto Localmente
+
+### 📂 1. Clonar o repositório
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd <NOME_DA_PASTA>
+```
+
+---
+
+### 🖥️ 2. Configurar o Backend (Laravel)
+```bash
+cd backend
+
+# Instalar dependências
+composer install
+
+# Copiar variáveis de ambiente
+cp .env.example .env
+
+# Gerar key da aplicação
+php artisan key:generate
+
+# Rodar migrations
+php artisan migrate --seed
+
+# Iniciar servidor local
+php artisan serve
+```
+
+🔗 O backend estará rodando em:  
+`http://localhost:8000/api`
+
+---
+
+### 💻 3. Configurar o Frontend (React/Vite)
+```bash
+cd ../
+
+# Instalar dependências
+npm install
+
+# Rodar projeto em modo dev
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+🔗 O frontend estará rodando em:  
+`http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## ⚙️ Configuração de Ambiente
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+No **frontend**, crie um arquivo `.env` com a URL da API Laravel:
 
-## What technologies are used for this project?
+```env
+VITE_API_URL=http://localhost:8000/api
+```
 
-This project is built with:
+No **backend**, ajuste o `.env` para seu banco de dados e credenciais.  
+Exemplo (SQLite em desenvolvimento):
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/backend/database/database.sqlite
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 📱 Fluxo do Usuário
 
-Simply open [Lovable](https://lovable.dev/projects/6f6c6369-4afc-41ab-b565-da6598817137) and click on Share -> Publish.
+1. Usuário acessa a página inicial e pode **se registrar ou logar**  
+2. Ao se registrar, recebe um **código de convite único**  
+3. Pode compartilhar o convite no **WhatsApp** com link automático  
+4. Os convites válidos contabilizam pontos no **ranking**  
+5. Ranking atualizado pode ser visto em tempo real na **página de ranking**  
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## 🌍 Deploy
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+O projeto pode ser hospedado em qualquer servidor compatível com **Laravel (backend)** e **React (frontend)**.  
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Opções de Deploy:
+- Backend: VPS/Dedicated, Laravel Forge, Docker  
+- Frontend: Vercel, Netlify, Cloudflare Pages, ou deploy direto no mesmo servidor do backend  
+
+👉 Em desenvolvimento inicial, parte do projeto foi criada via **Lovable.dev**, mas o repositório é totalmente independente.  
+
+---
+
+## 🤝 Créditos
+
+Projeto desenvolvido por **rmdev**  
+> Integração frontend + backend, ranking de convites e sistema de pré-registro.  
+
+---
+
+## 📜 Licença
+
+
+Sinta-se livre para usar, modificar e contribuir!  

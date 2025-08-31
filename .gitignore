@@ -1,4 +1,6 @@
-# Logs
+# -------------------------
+# LOGS E TEMP
+# -------------------------
 logs
 *.log
 npm-debug.log*
@@ -7,18 +9,103 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# -------------------------
+# DEPENDÊNCIAS (NPM/Composer)
+# -------------------------
+node_modules/
+backend/node_modules/
+backend/vendor/
 
-# Editor directories and files
+# -------------------------
+# BUILDS/ARTEFATOS
+# -------------------------
+dist/
+dist-ssr/
+build/
+.turbo/
+.parcel-cache/
+coverage/
+.tmp/
+.cache/
+.next/
+.nuxt/
+out/
+
+# -------------------------
+# CONFIGURAÇÕES LOCAIS
+# -------------------------
+*.local
+*.env
+*.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# -------------------------
+# EDITOR/IDE
+# -------------------------
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+!.vscode/settings.json
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.iml
+
+# -------------------------
+# SISTEMA OPERACIONAL
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# LARAVEL ESPECÍFICO
+# -------------------------
+/backend/storage/*
+!/backend/storage/.gitignore
+!/backend/storage/app
+!/backend/storage/app/public
+
+/backend/bootstrap/cache/*
+!/backend/bootstrap/cache/.gitignore
+
+/backend/public/storage
+/backend/.phpunit.result.cache
+backend/composer.phar
+
+# -------------------------
+# FRONTEND (React/Vite/Next)
+# -------------------------
+.vite
+.eslintcache
+.vercel/
+.netlify/
+.expo/
+
+# -------------------------
+# ARQUIVOS EXTRAS
+# -------------------------
+backend.zip
+
+
+# Arquivos temporários/lixo
+backend/$*
+backend/0
+backend/0')
+backend/[]
+backend/INT
+backend/count()
+backend/get*
+backend/json([
+backend/limit(50)
+backend/map(function
+backend/name
+backend/orderBy*
+backend/round($conversionRate
+backend/whereNotNull*
+
+backend/database/*.sqlite
