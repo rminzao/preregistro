@@ -13,6 +13,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        if (app()->runningInConsole()) {
+            $this->app->terminating(function () {
+                echo "🚀 Backend desenvolvido por rmdev\n";
+            });
+        }
+
+        \Log::info('🚀 Backend desenvolvido por rmdev');
     }
 }

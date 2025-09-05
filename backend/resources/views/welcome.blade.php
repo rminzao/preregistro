@@ -270,6 +270,16 @@
             </main>
         </div>
 
+        <!-- Footer discreto com créditos -->
+        <footer class="w-full text-center mt-8">
+            <p class="text-xs text-[#706f6c] dark:text-[#A1A09A]">
+                Desenvolvido por 
+                <a href="https://github.com/rminzao" target="_blank" class="text-[#f53003] dark:text-[#FF4433] hover:underline transition-colors">
+                    rmdev
+                </a>
+            </p>
+        </footer>
+
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
